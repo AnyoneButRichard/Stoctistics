@@ -1,5 +1,5 @@
 # Stoctistics
-Bears &amp; Bulls &amp; Boys
+A small project for scraping and storing stocks data.
 
 Setup Environment
 =======
@@ -8,15 +8,12 @@ Setup Environment
 3) pip install yfinance		(yahoo finance api)
 4) pip install lxml 		(dependency)
 
-
-
-
 Sources
 =======
-- test.py source code & explanation
+test.py source code & explanation
 https://aroussi.com/post/python-yahoo-finance
 
-- yfinance documentation
+yfinance documentation
 https://github.com/ranaroussi/yfinance
 
 
