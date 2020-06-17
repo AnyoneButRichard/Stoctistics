@@ -10,10 +10,5 @@ Setup Environment
 
 Sources
 =======
-test.py source code & explanation
-https://aroussi.com/post/python-yahoo-finance
-
-yfinance documentation
-https://github.com/ranaroussi/yfinance
-
-
+test.py source code & explanation (https://aroussi.com/post/python-yahoo-finance)
+yfinance documentation (https://github.com/ranaroussi/yfinance)
