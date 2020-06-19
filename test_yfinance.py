@@ -14,10 +14,10 @@ count_time(timer)
 #print(info)
 # This took roughly 210 seconds
 
-#timer = time.time()
-#data = stock.history()
-#print(data)
-#count_time(timer)
+timer = time.time()
+data = stock.history()
+print(data)
+count_time(timer)
 # This took roughly 40 seconds
 
 timer = time.time()

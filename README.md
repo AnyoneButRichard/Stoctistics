@@ -1,18 +1,35 @@
 # Stoctistics
 A small project for scraping and storing stocks data.
 
-Setup Environment
+Setup Environment Python3
 =======
 1) sudo apt install python3	(python3 binary)
 2) sudo apt install python3-pip		(helps install modules for python)
 3) sudo apt install python3-venv (virtual environment so you can add modules without affecting global)
-4) **skip** python3 -m venv env (already generated virtual environment)
+4) **skip** python3 -m venv python3_env (already generated virtual environment)
 5) **source env/bin/activate** (enter environment)
 6) **deactivate** (leave environment)
 
-**Environment**
+
+Setup Environment pypy3 (Not Functional! Use python3 for now)
 =======
-**source env/bin/activate*
+1) sudo apt-get install software-properties-common 	(adds the "add-apt-repository" command)
+2) sudo apt update
+3) sudo apt upgrade
+4) sudo apt install pypy3
+5) **skip* pypy3 -m venv pypy3_env
+6) **source env/bin/activate** (enter environment)
+7) **deactivate** (leave environment)
+
+
+Pre-requisites for yfinance pypy3 (Not functional! Use python3 for now)
+=======
+- pip install cython
+- pip install --upgrade setuptools
+- pip install numpy
+- pip install pandas
+
+
 
 Sources
 =======
@@ -30,4 +47,5 @@ pandas dataframe documentation
 
 pymongo guide with mongodb
 (https://realpython.com/introduction-to-mongodb-and-python/)
+
 
