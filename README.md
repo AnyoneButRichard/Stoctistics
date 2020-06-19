@@ -22,3 +22,12 @@ test.py source code & explanation
 
 yfinance documentation 
 (https://github.com/ranaroussi/yfinance)
+
+
+pandas dataframe documentation
+(https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.DataFrame.html)
+
+
+pymongo guide with mongodb
+(https://realpython.com/introduction-to-mongodb-and-python/)
+

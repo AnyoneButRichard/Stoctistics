@@ -21,8 +21,8 @@ count_time(timer)
 # This took roughly 40 seconds
 
 timer = time.time()
-data = stock.history(period="1d", interval="1h")
-#print(data)
+data = stock.history(period="1d", interval="5m", prepost=True)
+print(data)
 count_time(timer)
 
 
