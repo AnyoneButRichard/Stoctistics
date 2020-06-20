@@ -4,7 +4,7 @@ from datetime import date
 
 cluster = MongoClient('mongodb+srv://admin:MPyhQ9kwjo1pbUz2@cluster0-nm4ov.azure.mongodb.net/Cluster0?retryWrites=true&w=majority')
 
-today = date.today();
+today = date.today()
 
 # CRUD
 # CREATE (POST)
