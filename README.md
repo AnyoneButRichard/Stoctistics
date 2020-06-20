@@ -30,6 +30,17 @@ Pre-requisites for yfinance pypy3 (Not functional! Use python3 for now)
 - pip install pandas
 
 
+Json Format:
+=======
+
+{
+"_id": "SPY - 06/19/20,
+"name": "SPY",
+"price": [5000, 6000, 7000],
+"time": ["8:00", "8:05", "8:10"]
+}
+
+
 
 Sources
 =======
