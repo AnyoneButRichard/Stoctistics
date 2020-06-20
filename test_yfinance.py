@@ -1,5 +1,6 @@
 import yfinance as yf
 import time
+import json
 
 def count_time(time1):
     print(round(time.time() - time1, 3), "seconds")
@@ -23,6 +24,12 @@ count_time(timer)
 timer = time.time()
 data = stock.history(period="1d", interval="5m", prepost=True)
 print(data)
+count_time(timer)
+
+
+timer = time.time()
+jsondata = data.to_json()
+print(jsondata)
 count_time(timer)
 
 
