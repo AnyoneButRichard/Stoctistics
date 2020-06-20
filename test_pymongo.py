@@ -1,4 +1,9 @@
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://richard:<password>@stoctistics-shard-00-00-vjvbe.azure.mongodb.net:27017,stoctistics-shard-00-01-vjvbe.azure.mongodb.net:27017,stoctistics-shard-00-02-vjvbe.azure.mongodb.net:27017/<dbname>?ssl=true&replicaSet=Stoctistics-shard-0&authSource=admin&retryWrites=true&w=majority")
-db = client.test
+client = MongoClient("mongodb+srv://alexi:bkj1tUomlpAXIovl@stoctistics-vjvbe.azure.mongodb.net/<dbname>?retryWrites=true&w=majority")
+db = cluster["test"]
+collection = db[test]
+
+test_stock = {"_id": , "stock_name": SPY, "price": 50000}
+
+collection.insert_one({test_stock})
