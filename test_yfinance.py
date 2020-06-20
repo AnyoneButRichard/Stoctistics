@@ -22,14 +22,27 @@ count_time(timer)
 # This took roughly 40 seconds
 
 timer = time.time()
-data = stock.history(period="1d", interval="5m", prepost=True)
+data = stock.history(period="1d", interval="5m")
 print(data)
 count_time(timer)
 
+#timer = time.time()
+#for i in data.index:
+#    print(i)
+#    print(data["High"][i])
+#count_time(timer)
+
 
 timer = time.time()
-jsondata = data.to_json()
-print(jsondata)
+jsondata = {}
+for i in data.index:
+    jsondata[i] = data["Open"][i]
+#print(jsondata)
 count_time(timer)
+
+#
+#for key, value in jsondata.items():
+#    print(key, ' : ', value)
+
 
 
