@@ -22,7 +22,7 @@ count_time(timer)
 # This took roughly 40 seconds
 
 timer = time.time()
-data = stock.history(period="1d", interval="5m")
+data = stock.history(period="2y", interval="60m")
 print(data)
 count_time(timer)
 
