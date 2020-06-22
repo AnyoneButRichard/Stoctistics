@@ -6,7 +6,7 @@ def count_time(time1):
     print(round(time.time() - time1, 3), "seconds")
 
 timer = time.time()
-ticker = "SPY"
+symbol = "SPY"
 stock = yf.Ticker(ticker)
 print("Elapsed time for Ticker")
 count_time(timer)

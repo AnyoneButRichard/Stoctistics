@@ -60,3 +60,26 @@ pymongo guide with mongodb
 (https://realpython.com/introduction-to-mongodb-and-python/)
 
 
+pymongo collection operations
+(https://api.mongodb.com/python/current/api/pymongo/collection.html)
+
+
+
+
+Timings
+=======
+
+rstocks: format json {"_id": timestamp,...} (1 document per time stamp)
+on avg
+
+find_one:
+0.074 seconds for a find match
+0.074 seconds for a mismatch
+
+insert_one:
+0.083 seconds for a document insertion
+
+
+
+
+
