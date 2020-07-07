@@ -1,8 +1,20 @@
 import json
 import data
+import scrape
+import logging
+from datetime import datetime
+import yfinance as yf
 from pymongo import MongoClient
 
-def cluster_connect(dbname = "rstocks"):
+# cluster_connect:
+# ==============================================
+# Inputs: (str) dbname = "astocks"
+# Outputs: our stocks database cluster
+#
+# Function: Connects to the database cluster and returns the cluster as an object
+# by loading the credentials file (private) and then invoking the MongoClient()
+# method from the pymongo library
+def cluster_connect(dbname = "astocks"):
     with open('../resources/cred.json') as inFile:
         cred = json.load(inFile)
 
@@ -11,37 +23,65 @@ def cluster_connect(dbname = "rstocks"):
     client = MongoClient(connection)
     return client
 
-
-def add_rcollections(db, filename = "../resources/tickers.txt"):
+# generate_rcollections:
+# ================================================================
+# Inputs: (str) filename = "tickers.txt"
+# Outputs: None
+#
+# Function: Runs through list of tickers in the tickers.txt, and generates
+# an empty collection inside of the "rstocks" database for each ticker.
+def generate_rcollections(filename = "../resources/tickers.txt"):
     with open(filename) as inFile:
         tickers = inFile.read().splitlines()
-    cluster = connect()
+    cluster = cluster_connect()
     db = cluster["rstocks"]
-    for i in tickers:
-        db.createCollection(i)
+    for ticker in tickers:
+        db.createCollection(ticker)
 
+# auto_astocks:
+# =================================================================
+# Inputs: (str) filename = "tickers.txt"
+# Outputs: None
+#
+# Function:
+# Automatically generates documents for each symbol listed in tickers.txt
+# A debug log is generated due to the yfinance library having conflicts with
+# various tickers, so we choose to record the error just in case.
+def auto_astocks(filename = "../resources/tickers.txt"):
+    now = datetime.now().strftime("%m/%d/%y (%H:%M:%S)")
+    logging.basicConfig(filename='../logs/error.log', filemode ='a', level=logging.DEBUG)
+    logging.info('Auto_Astocks Start Timestamp: ' + now)
+    with open(filename) as inFile:
+        symbols = inFile.read().splitlines()
+    cluster = cluster_connect()
+    db = cluster["astocks"]
+    collection = db["stocks"]
+
+    for symbol in symbols:
+        try:
+            ticker = yf.Ticker(symbol)
+            add_data_astocks(collection, ticker, "60d", "5m")
+        except IndexError:
+            logging.error('Cannot find ' + symbol)
+   
+# adds data to a collection in the form of astocks json
 def add_data_astocks(collection, ticker, per = "60d", inc = "5m"):
-    symbol = ticker.info.symbol
+    json_list = scrape.serialize_astocks(ticker, period = per, interval = inc)
+    for json_data in json_list:
+        json_id = json_data["_id"]
+        collection.update_one({"_id":json_data["_id"]}, {"$set" :json_data}, upsert=True)
 
-# adds data to a collection in the form of json2 (refer to readme)
+# adds data to a collection in the form of rstocks json (refer to readme)
+# format this into the new method for serializing (incomplete)
 def add_data_rstocks(collection, ticker, per = "60d", inc = "5m"):
     df = ticker.history(period = per, interval = inc)
-    for i in df.index:
-        status = collection.find_one({"_id": i})
-        if(status == None):
-            json_data = data.serialize_dataframe_rstocks(df, i)
-            collection.insert_one(json_data) 
+    for timestamp in df.index:
+        json_data = scrape.serialize_rstocks(df, timestamp)
+        collection.update_one({"_id": i}, {"$setOnInsert" :json_data}, upsert=True)
 
-        # alternative (needs testing)
-        # json_data = data.serialize_dataframe_rstocks(df, i)
-        # collection.update({"_id": i}, {$setOnInsert :json_data}, {upsert: True})
-
+# incomplete
 def get_daily_rstocks(db):
     for i in db.collection_names():
         ticker = db[i].name
-        data = getHistory(ticker, per = "1d")
-        addData2(db[i], data)
-
-
 
 

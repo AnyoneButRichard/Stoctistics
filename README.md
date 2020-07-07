@@ -2,7 +2,7 @@
 A small project for scraping and storing stocks data.
 
 Setup Environment Python3
-=======
+==========================
 1) sudo apt install python3	(python3 binary)
 2) sudo apt install python3-pip		(helps install modules for python)
 3) sudo apt install python3-venv (virtual environment so you can add modules without affecting global)
@@ -10,29 +10,35 @@ Setup Environment Python3
 5) **source env/bin/activate** (enter environment)
 6) **deactivate** (leave environment)
 
+Note: be sure to run pip install only in the environment!
+You'll need yfinance, pymongo, pandas, numpy, matplotlib, ...
 
-Setup Environment pypy3 (Not Functional! Use python3 for now)
-=======
-1) sudo apt-get install software-properties-common 	(adds the "add-apt-repository" command)
-2) sudo apt update
-3) sudo apt upgrade
-4) sudo apt install pypy3
-5) **skip* pypy3 -m venv pypy3_env
-6) **source env/bin/activate** (enter environment)
-7) **deactivate** (leave environment)
+Common Variables:
+=================
+
+**Database Connections**: 
+cluster = (obj) database cluster
+dbname = (str) database name
+db = (obj) database
+coll = (obj) collection
 
 
-Pre-requisites for yfinance pypy3 (Not functional! Use python3 for now)
-=======
-- pip install cython
-- pip install --upgrade setuptools
-- pip install numpy
-- pip install pandas
+**YFinance**:
+ticker = (obj) yfinance Ticker object
+ticker_list = (list) yfinance Ticker objects
+df = (obj) dataframe
+
+
+**Fprmatting**:
+symbol = (str) ticker name
+symbol_list = (list) ticker names
+document = (dict) json serialized stock dictionary
+document_list = (list) list of json stock dictionaries
 
 
 Json Format:
-=======
-
+============
+astocks - 1 document per stock per day
 {
 "_id": "SPY - 06/19/20,
 "name": "SPY",
@@ -40,6 +46,25 @@ Json Format:
 "time": ["8:00", "8:05", "8:10"]
 }
 
+
+rstocks - 1 document per timestamp 
+{
+    "_id": timestamp
+    "name": "SPY"
+    "Open": 100.00
+    "High": 250.00
+    ...
+}
+
+
+
+Timings
+=======
+astocks to database: 
+nonexisting 1 stock over 60 days: ~ 8 seconds
+
+rstocks to database:
+nonexisting 1 stock over 60 days: ~ 720 seconds
 
 
 Sources
@@ -62,24 +87,5 @@ pymongo guide with mongodb
 
 pymongo collection operations
 (https://api.mongodb.com/python/current/api/pymongo/collection.html)
-
-
-
-
-Timings
-=======
-
-rstocks: format json {"_id": timestamp,...} (1 document per time stamp)
-on avg
-
-find_one:
-0.074 seconds for a find match
-0.074 seconds for a mismatch
-
-insert_one:
-0.083 seconds for a document insertion
-
-
-
 
 
