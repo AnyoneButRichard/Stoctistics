@@ -1,6 +1,5 @@
 import json
 import data
-import scrape
 import logging
 from datetime import datetime
 import yfinance as yf
@@ -9,7 +8,7 @@ from pymongo import MongoClient
 # cluster_connect:
 # ==============================================
 # Inputs: (str) dbname = "astocks"
-# Outputs: our stocks database cluster
+# Outputs: (obj) cluster
 #
 # Function: Connects to the database cluster and returns the cluster as an object
 # by loading the credentials file (private) and then invoking the MongoClient()
@@ -23,6 +22,49 @@ def cluster_connect(dbname = "astocks"):
     client = MongoClient(connection)
     return client
 
+# start_logger:
+# =======================================================
+# Inputs: (obj) logger
+# Outputs: (datetime) start
+# 
+# Function:
+# Inline function that records start time to logs and
+# returns to the user the 'start' time
+def start_logger(logger):
+    start = datetime.now()
+    now = start.strftime("%m/%d/%y (%H:%M:%S)")
+    logger.info('Start Time: ' + now)
+    return start
+
+# end_logger:
+# =======================================================
+# Inputs: (datetime) start, (obj) logger
+# Outputs: None
+#
+# Function:
+# Inline function that records end time to logs
+# and logs the total elapsed time as well
+def end_logger(start, logger):
+    end = datetime.now()
+    now = end.strftime("%m/%d/%y (%H:%M:%S)")
+    logger.info('End Time: ' + now)
+    total_time = str(round((end - start).total_seconds(), 3))
+    logger.info('Elapsed Time: ' + total_time + ' seconds')
+
+# partition:
+# ==============================================
+# Inputs: (list) ls, (int) divs
+# Outputs: (generator) symbol
+#
+# Function: Generates a partitioned list based on the
+# number of divisions requested. Will come out in the
+# form of a "list of lists"
+def partition(ls, divs):
+    for i in range(0, len(ls), divs):
+        yield ls[i:1 + divs]
+
+
+# Move to rstocks when revised necessary
 # generate_rcollections:
 # ================================================================
 # Inputs: (str) filename = "tickers.txt"
@@ -37,51 +79,4 @@ def generate_rcollections(filename = "../resources/tickers.txt"):
     db = cluster["rstocks"]
     for ticker in tickers:
         db.createCollection(ticker)
-
-# auto_astocks:
-# =================================================================
-# Inputs: (str) filename = "tickers.txt"
-# Outputs: None
-#
-# Function:
-# Automatically generates documents for each symbol listed in tickers.txt
-# A debug log is generated due to the yfinance library having conflicts with
-# various tickers, so we choose to record the error just in case.
-def auto_astocks(filename = "../resources/tickers.txt"):
-    now = datetime.now().strftime("%m/%d/%y (%H:%M:%S)")
-    logging.basicConfig(filename='../logs/error.log', filemode ='a', level=logging.DEBUG)
-    logging.info('Auto_Astocks Start Timestamp: ' + now)
-    with open(filename) as inFile:
-        symbols = inFile.read().splitlines()
-    cluster = cluster_connect()
-    db = cluster["astocks"]
-    collection = db["stocks"]
-
-    for symbol in symbols:
-        try:
-            ticker = yf.Ticker(symbol)
-            add_data_astocks(collection, ticker, "60d", "5m")
-        except IndexError:
-            logging.error('Cannot find ' + symbol)
-   
-# adds data to a collection in the form of astocks json
-def add_data_astocks(collection, ticker, per = "60d", inc = "5m"):
-    json_list = scrape.serialize_astocks(ticker, period = per, interval = inc)
-    for json_data in json_list:
-        json_id = json_data["_id"]
-        collection.update_one({"_id":json_data["_id"]}, {"$set" :json_data}, upsert=True)
-
-# adds data to a collection in the form of rstocks json (refer to readme)
-# format this into the new method for serializing (incomplete)
-def add_data_rstocks(collection, ticker, per = "60d", inc = "5m"):
-    df = ticker.history(period = per, interval = inc)
-    for timestamp in df.index:
-        json_data = scrape.serialize_rstocks(df, timestamp)
-        collection.update_one({"_id": i}, {"$setOnInsert" :json_data}, upsert=True)
-
-# incomplete
-def get_daily_rstocks(db):
-    for i in db.collection_names():
-        ticker = db[i].name
-
 

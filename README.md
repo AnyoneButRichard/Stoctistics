@@ -1,17 +1,27 @@
 # Stoctistics
 A small project for scraping and storing stocks data.
 
-Setup Environment Python3
-==========================
-1) sudo apt install python3	(python3 binary)
-2) sudo apt install python3-pip		(helps install modules for python)
-3) sudo apt install python3-venv (virtual environment so you can add modules without affecting global)
-4) **skip** python3 -m venv python3_env (already generated virtual environment)
-5) **source env/bin/activate** (enter environment)
-6) **deactivate** (leave environment)
+Version History
+====================
++ Establish a connection to the database
++ Utilize yfinance to draw out stock history
++ Determine the storage format (astocks & rstocks)
++ Convert dataframe into desired json format
++ Be able to upload documents into the database
++ Timings Evaluation rstocks (720 seconds for 60 days), astocks (7 seconds for 60 days)
++ Reconfigured rstocks to minimize documents needed to upload
++ Automate data collection
++ Multithread to reduce time spent updating database
 
-Note: be sure to run pip install only in the environment!
-You'll need yfinance, pymongo, pandas, numpy, matplotlib, ...
+- cron job to run the programs in the background at the correct time and day
+- Generate an options json document format
+- Retrieve stock data from the database
+- Reconversion back to a dataframe
+- Scatter/Dot Graph of the stock data
+- Generate a 1 month set focused json format [experimental]
+- Change from overwriting document to appending to list inside document to reduce time [experimental]
+
+
 
 Common Variables:
 =================
@@ -29,11 +39,11 @@ ticker_list = (list) yfinance Ticker objects
 df = (obj) dataframe
 
 
-**Fprmatting**:
+**Formatting**:
 symbol = (str) ticker name
 symbol_list = (list) ticker names
-document = (dict) json serialized stock dictionary
-document_list = (list) list of json stock dictionaries
+doc = (dict) serialized json mongodb document
+doc_list = (list) list of serialized json mongodb document
 
 
 Json Format:

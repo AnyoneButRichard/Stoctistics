@@ -2,5 +2,6 @@ resources/cred.json
 __pycache__
 tests/personal.py
 logs/
+*.swp
 
 
