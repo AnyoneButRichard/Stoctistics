@@ -1,0 +1,9 @@
+#astocks
+*/5 7-15 * * 1-5 /home/richard/Stoctistics/python3env/bin/python /home/richard/Stoctistics/src/run_astocks.py
+30-55/5 6 * * 1-5 /home/richard/Stoctistics/python3env/bin/python /home/richard/Stoctistics/src/run_astocks.py
+
+# rstocks
+*/5 7-15 * * 1-5 /home/richard/Stoctistics/python3env/bin/python /home/richard/Stoctistics/src/run_rstocks.py
+30-55/5 6 * * 1-5 /home/richard/Stoctistics/python3env/bin/python /home/richard/Stoctistics/src/run_rstocks.py
+
+
