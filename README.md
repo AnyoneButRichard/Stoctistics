@@ -103,7 +103,7 @@ end = (timestamp) the end time<br>
 Note: *2020-04-22T13:30:00.000+00:00* is a timestamp.
 
 ### rstocks \[v0.1.2\]
-##### dismissed
+*dismissed*
 ```
 {
     "_id": "2020-04-22T13:30:00.000+00:00",
@@ -123,12 +123,7 @@ Note: *2020-04-22T13:30:00.000+00:00* is a timestamp.
 <br>
 
 ### rstocks\[v0.2.3\]
-##### current
-
-Each collection holds all data regarding a stock by day<br>
-Generate a document for a day's worth of data<br>
-Revision closely resembles astocks format (will be making modifications in the future to be more map-like)
-\_id is the date
+*current*
 ```
 {
 "_id": "06/19/20",
@@ -149,7 +144,7 @@ Revision closely resembles astocks format (will be making modifications in the f
 <br>
 
 ### astocks \[v0.1.2\]
-##### current
+*current*
 ```
 {
 "_id": "SPY - 06/19/20",

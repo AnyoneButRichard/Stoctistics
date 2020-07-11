@@ -124,6 +124,7 @@ def store_stock(symbol, period = "1d", interval = "5m"):
 
     # End Timer
     data.end_logger(start, logger)
+    logger.debug('Ticker symbol stored: ' + symbol)
 
 # update_stocks:
 # ====================================================================

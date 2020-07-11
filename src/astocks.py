@@ -25,7 +25,7 @@ TICKER_FILENAME="../resources/tickers.txt"
 def create_doc(symbol, date):
     doc = {}
     doc["_id"] = symbol + " - " + date
-    doc["Name"] = symbol
+    doc["Symbol"] = symbol
     doc["Date"] = date
     doc["Time"] = []
     doc["Timestamp"] = []
@@ -110,6 +110,8 @@ def store_stock(symbol, period="1d", interval="5m"):
 
     # Start Timer
     logging.basicConfig(filename=LOG_FILENAME, filemode="a", level=logging.INFO)
+    logger = logging.getLogger("astocks.store_stock")
+    start = data.start_logger(logger)
 
     # Retrieve collection (threadsafe if not sharing collections)
     cluster = data.cluster_connect()
@@ -121,6 +123,9 @@ def store_stock(symbol, period="1d", interval="5m"):
 
     for doc in doc_list:
         coll.update_one({"_id": doc["_id"]}, {"$set" :doc}, upsert=True)
+
+    # End Timer
+    data.end_logger(start, logger)
 
 # update_stocks:
 # =================================================================
