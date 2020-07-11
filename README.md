@@ -18,10 +18,10 @@ ase<br>
 + **\[v0.2.3\]** Modifications of rstocks format<br>
 + **\[v0.2.5\]** Automate data collection (removing to implement cron jobs)<br>
 + **\[v0.3.0\]** Multithreading<br>
++ **\[v0.3.3\]** Cron Job added<br>
 <br>
 
 ## Milestones to reach
-- Use a cron job to run the programs in the background at the correct time and day
 - Generate an options json document format
 - Retrieve stock data from the database
 - Reconversion back to a dataframe
