@@ -10,8 +10,8 @@ from multiprocessing import Pool as ThreadPool
 # User defined
 import data
 
-LOG_FILENAME = "../logs/rstocks.log"
-TICKER_FILENAME = "../resources/tickers.txt"
+LOG_FILENAME = "/home/richard/Stoctistics/logs/rstocks.log"
+TICKER_FILENAME = "/home/richard/Stoctistics/resources/tickers.txt"
 
 # create_doc:
 # ========================================================

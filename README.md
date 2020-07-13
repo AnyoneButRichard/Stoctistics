@@ -22,8 +22,8 @@ ase<br>
 <br>
 
 ## Milestones to reach
-- Generate an options json document format
 - Retrieve stock data from the database
+- Generate an options json document format
 - Reconversion back to a dataframe
 - Scatter/Dot Graph of the stock data
 - (Experimental) Generate a 1 month set focused json format (increases cpu time but reduces io time)
@@ -33,7 +33,7 @@ ase<br>
 
 ## Timing Reports:
 We have standardized to **5 minute intervals** and **ignore premarket and aftermarket**.<br>
-We also had to dismiss a few stocks from the S&P 500 Index (down to 497) to meet the requirements of Atlas:MongoDB.<br>
+We also had to dismiss a few stocks from the S&P 501 Index (down to 497) to meet the requirements of Atlas:MongoDB.<br>
 This will be revised back to the full 504 stocks after localizing the database.<br>
 
 #### Initial format 6/21

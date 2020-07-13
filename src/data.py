@@ -5,6 +5,9 @@ from datetime import datetime
 import yfinance as yf
 from pymongo import MongoClient
 
+CRED_FILENAME = '/home/richard/Stoctistics/resources/cred.json'
+TICKER_FILENAME = '/home/richard/Stoctistics/resources/tickers.txt'
+
 # cluster_connect:
 # ==============================================
 # Inputs: (str) dbname = "astocks"
@@ -14,7 +17,7 @@ from pymongo import MongoClient
 # by loading the credentials file (private) and then invoking the MongoClient()
 # method from the pymongo library
 def cluster_connect(dbname = "astocks"):
-    with open('../resources/cred.json') as inFile:
+    with open(CRED_FILENAME) as inFile:
         cred = json.load(inFile)
 
     connection = "mongodb://" + cred["user"] + ":" + cred["password"] + "@stoctistics-shard-00-00-vjbe.azure.mongodb.net:27017,stoctistics-shard-00-01-vjbe.azure.mongodb.net:27017,stoctistics-shard-00-02-vjvbe.azure.mongodb.net:27017/" + dbname + "?ssl=true&replicaSet=Stoctistics-shard-0&authSource=admin&retryWrites=true&w=majority"
@@ -72,7 +75,7 @@ def partition(ls, divs):
 #
 # Function: Runs through list of tickers in the tickers.txt, and generates
 # an empty collection inside of the "rstocks" database for each ticker.
-def generate_rcollections(filename = "../resources/tickers.txt"):
+def generate_rcollections(filename=TICKER_FILENAME):
     with open(filename) as inFile:
         tickers = inFile.read().splitlines()
     cluster = cluster_connect()
