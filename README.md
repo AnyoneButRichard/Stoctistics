@@ -22,14 +22,24 @@ ase<br>
 <br>
 
 ## Milestones to reach
+- Localize database to same machine (we've hit data cap on Atlas)
 - Retrieve stock data from the database
 - Generate an options json document format
 - Reconversion back to a dataframe
 - Scatter/Dot Graph of the stock data
 - (Experimental) Generate a 1 month set focused json format (increases cpu time but reduces io time)
 - (Experimental) Change from overwriting document to appending to list inside document to reduce time
+
+
+## Current Tasks
+- Options format json
+- Historical strike dates & Current strike dates json format
+- Crontab for updating strike dates once at beginning of market day
+-  
 ------------------------------------------------------------------------------------------------------------------------------------------
 <br>
+
+
 
 ## Timing Reports:
 We have standardized to **5 minute intervals** and **ignore premarket and aftermarket**.<br>
@@ -58,7 +68,7 @@ This will be revised back to the full 504 stocks after localizing the database.<
 | rstocks format 	|  1.083 seconds  	|   32.08 seconds   	| 1 minutes 5 seconds 	| 16 minutes 36 seconds 	|
 | astocks format 	|  1.066 seconds  	|   33.02 seconds   	|  1 minute 4 seconds 	|  17 minutes 6 seconds 	|
 
-Note: 60 day periods have much larger times. This is most likely due to limitations of the cpu.<br>
+Note: 60 day periods cost drastically more time. This is most likely due to limitations of the cpu.<br>
 Multithreading speeds up I/O requests which we can see with the S&P 500 Index. However since a large<br>
 chunk of the time was due to a **cpu bound process** (serializing the 60 day period dataframe), the cpu<br>
 was most likely overworked trying to serialize all 16 threads at once. A few solutions for this would<br>
@@ -161,3 +171,13 @@ Note: *2020-04-22T13:30:00.000+00:00* is a timestamp.
 "Volume": [161691, 96106, 59599, ...]
 }
 ```
+
+### options \[v0.3.6\]
+*current*
+```
+{
+"_id": "SPY - 06/19/20",
+"Strikes"
+}
+
+

@@ -1,4 +1,4 @@
-# Libraries
+### Libraries
 import json
 import time
 import logging
@@ -7,7 +7,7 @@ from datetime import datetime
 from pymongo import MongoClient
 from multiprocessing import Pool as ThreadPool
 
-# User defined
+### User defined
 import data
 
 LOG_FILENAME = "/home/richard/Stoctistics/logs/rstocks.log"
@@ -51,12 +51,13 @@ def create_doc(symbol, date):
 # At the end, we return the list of documents for given stock.
 def serialize_stock(symbol, period = "1d", interval = "5m"):
    
-    # Start Timer
-    logging.basicConfig(filename=LOG_FILENAME, filemode="a", level=logging.INFO)
-    logger = logging.getLogger("rstocks.serialize_stock")
-    start = data.start_logger(logger)
+    ### Start Timer (removing)
+    # logging.basicConfig(filename=LOG_FILENAME, filemode="a", level=logging.INFO)
+    # logger = logging.getLogger("rstocks.serialize_stock")
+    # start = data.start_logger(logger)
     
-    # Initialize and generate data
+    ### Initialize and generate data
+    print("Starting serialize_stock:", symbol)
     try:
         ticker = yf.Ticker(symbol)
         df = ticker.history(period = period, interval = interval)
@@ -70,13 +71,13 @@ def serialize_stock(symbol, period = "1d", interval = "5m"):
         timestamp = i
         newdate = timestamp.strftime("%m/%d/%y")
 
-        # new date finalizes current document and generates a new document
+        ### New date finalizes current document and generates a new document
         if(newdate != date):
             date = newdate
             doc_list.append(doc)
             doc = create_doc(symbol, date)
        
-        # append data to the document 
+        ### Append data to the document 
         doc["Time"].append(timestamp.strftime("%H:%M:%S"))
         doc["Timestamp"].append(timestamp)
         doc["Open"].append(df["Open"][i])
@@ -89,8 +90,9 @@ def serialize_stock(symbol, period = "1d", interval = "5m"):
 
     doc_list.append(doc)
     
-    # End Timer
-    data.end_logger(start, logger)
+    ### End Timer
+    # data.end_logger(start, logger)
+    print("Ending serialize_stock:", symbol)
     
     return doc_list
     
@@ -106,25 +108,29 @@ def serialize_stock(symbol, period = "1d", interval = "5m"):
 # and updates the document if found in the collection, or generates
 # a brand new one if not found.
 def store_stock(symbol, period = "1d", interval = "5m"):
-
-    # Start Timer
+    
+    print("Starting store_stock:", symbol)
+    
+    ### Start Timer
     logging.basicConfig(filename=LOG_FILENAME, filemode="a", level=logging.INFO)
     logger = logging.getLogger("rstocks.store_stock")
     start = data.start_logger(logger)
 
-    # Retrieve collection
+    ### Retrieve collection
     cluster = data.cluster_connect()
     db = cluster["rstocks"]
     coll = db[symbol]
 
-    # Update document if found, generate new doc if not found
+    ### Update document if found, generate new doc if not found
     doc_list = serialize_stock(symbol, period = period, interval = interval)
     for doc in doc_list:
         coll.update_one({"_id": doc["_id"]}, {"$set" :doc}, upsert=True)
 
-    # End Timer
+    ### End Timer
     data.end_logger(start, logger)
     logger.debug('Ticker symbol stored: ' + symbol)
+
+    print("Ending store_stock:", symbol)
 
 # update_stocks:
 # ====================================================================
@@ -140,18 +146,18 @@ def store_stock(symbol, period = "1d", interval = "5m"):
 # for more info on errors
 def update_stocks(filename=TICKER_FILENAME, threads=16):
 
-    # Start Timer
+    ### Start Timer
     logging.basicConfig(filename=LOG_FILENAME, filemode="a", level=logging.INFO)
     logger = logging.getLogger("rstocks.update_stocks")
     start = data.start_logger(logger)
     
-    # Generate a list of tickers
+    ### Generate a list of tickers
     with open(filename) as inFile:
         symbols = inFile.read().splitlines()
     
-    # Use a Thread Pool to asynchronously make updates to the database
+    ### Use a Thread Pool to asynchronously make updates to the database
     with ThreadPool(threads) as pool:
         pool.map(store_stock, symbols)
 
-    # End Timer
+    ### End Timer
     data.end_logger(start, logger)

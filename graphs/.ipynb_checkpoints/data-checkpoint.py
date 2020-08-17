@@ -82,3 +82,4 @@ def generate_rcollections(filename=TICKER_FILENAME):
     db = cluster["rstocks"]
     for ticker in tickers:
         db.createCollection(ticker)
+
