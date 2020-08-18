@@ -181,13 +181,29 @@ def retrieve_stock(symbol):
 	logging.basicConfig(filename=LOG_FILENAME, filemode ="a", level=logging.INFO)
 	logger = logging.getLogger("astocks.retrieve_stock")
 	start = data.start_logger(logger)
-
-	# Generate search query
-	query = {"Symbol": symbol}
 	
 	# Connect to collection
 	cluster = data.cluster_connect()
 	db = cluster["astocks"]
 	coll = db["stocks"]
 
+	# Data retrieval
+	query = {"Symbol": symbol}
 	doc_list = coll.find(query)
+
+	# Generate an initial dataframe
+	column_names = astocks.columns_stock()
+	df = pd.DataFrame(columns = column_names)
+
+	# Iterate through the documents and create dataframes to append
+	for doc in doc_list:
+		doc_df = pd.DataFrame(doc, columns = column_names, index = doc['Timestamp'])
+		df = df.append(doc_df)
+
+	# Format and End Timer
+	df = df.sort_index
+    data.end_logger(start, logger)
+
+	return df
+
+
