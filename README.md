@@ -19,19 +19,22 @@ ase<br>
 + **\[v0.2.5\]** Automate data collection (removing to implement cron jobs)<br>
 + **\[v0.3.0\]** Multithreading<br>
 + **\[v0.3.3\]** Cron Job added<br>
++ **\[v0.4.0\]** Completely overwrote code into OOP schema from Functional<br>
++ **\[v0.4.3\]** Changed to new server and created localized database with compass visualization<br>
++ **\[v0.4.4\]** New authorization configuration file<br>
++ **\[v0.4.5\]** Pushing json onto the documents instead of overwriting entire document every time<br>
 <br>
 
 ## Milestones to reach
-- Localize database to same machine (we've hit data cap on Atlas)
-- Retrieve stock data from the database
+
 - Generate an options json document format
 - Reconversion back to a dataframe
 - Scatter/Dot Graph of the stock data
-- (Experimental) Generate a 1 month set focused json format (increases cpu time but reduces io time)
-- (Experimental) Change from overwriting document to appending to list inside document to reduce time
 
 
 ## Current Tasks
+- Multithreading incorporated with the new OOP format
+- Retrieve stock data from the database (OOP)
 - Options format json
 - Historical strike dates & Current strike dates json format
 - Crontab for updating strike dates once at beginning of market day

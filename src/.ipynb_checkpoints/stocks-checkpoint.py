@@ -103,7 +103,7 @@ class Stocks_Helper:
     def __init__(self, user_input=TICKER_FILENAME, period=""):
 
         ### Object instances
-        self.symbols = []
+        self.symbols = ""
         self.period = ""
 
         ### Parsing user input

@@ -1,7 +1,8 @@
-resources/cred.json
 __pycache__
 tests/personal.py
 logs/
+venv/
 *.swp
+config.ini
 
 
