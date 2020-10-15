@@ -10,7 +10,7 @@ EVENING=" 23:59:00"
 class Time_Helper:
     
     def Month_Day_Year(self, date):
-        dt = datetime.strptime(date, "%Y/%m/%d")
+        dt = datetime.strptime(date, "%Y-%m-%d")
         return datetime.strftime(dt, "%m/%d/%y") 
 
     def start(self, date):

@@ -145,15 +145,16 @@ class Stocks_Helper:
             date = doc["Timestamp"].strftime("%m/%d/%y")
             _id = symbol + " - " + date
         
+            ### May not be required at all
             ### Remove existing entry if found
-            collection.update_one(
-                { #Find document query
-                 "_id": _id
-                },
-                { #Update document query
-                 "$pull": {"history": doc}
-                } 
-            )
+            # collection.update_one(
+            #   { #Find document query
+            #    "_id": _id
+            #   },
+            #   { #Update document query
+            #    "$pull": {"history": doc}
+            #   } 
+            #)
 
             ### Pushing entry onto existing document's array
             collection.update_one(
