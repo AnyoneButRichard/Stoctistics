@@ -106,6 +106,10 @@ class Stocks_Helper:
         self.symbols = []
         self.period = ""
 
+        ### Retrieve Collection
+        self.client = Data_Client()
+        self.collection = self.client[COLLECTION_NAME]
+
         ### Parsing user input
         if isinstance(user_input, str):
             with open(user_input) as inFile:
@@ -132,10 +136,6 @@ class Stocks_Helper:
         ### Start Timer
         #store_timer = Log_Tool(LOG_FILENAME)
         #store_timer.start("stocks.store")
-
-        ### Retrieve Collection
-        client = Data_Client()
-        collection = client[COLLECTION_NAME]
         
         ### Establish a record
         record = Stocks_Record(symbol, self.period)
@@ -157,7 +157,7 @@ class Stocks_Helper:
             #)
 
             ### Pushing entry onto existing document's array
-            collection.update_one(
+            self.collection.update_one(
                 { #Find document query
                  "_id": _id
                 },
@@ -210,10 +210,6 @@ class Stocks_Helper:
         ### Start Timer
         retrieve_timer = Log_Tool(LOG_FILENAME)
         retrieve_timer.start("stocks.retrieve")
-        
-        ### Retrieve Collection
-        client = Data_Client()
-        collection = client[COLLECTION_NAME]
 
         ### Create Helpers
         time = Time_Helper()
@@ -234,7 +230,7 @@ class Stocks_Helper:
             query = {"Symbol": symbol, "history.0.Timestamp": {"$gte": start_date, "$lte": end_date}}
 
         ### Retrieve list and convert to dataframe_list
-        doc_list = collection.find(query) 
+        doc_list = self.collection.find(query) 
         df = pd.DataFrame(columns = self.columns)
         
         ### Convert and append each entry to the dataframe

@@ -6,12 +6,11 @@ We haven't really decided what to do after this step.<br>
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 ## Version History
-+ **\[v0.1.0\]** Establish a connection to the datab
-ase<br>
++ **\[v0.1.0\]** Establish a connection to the database<br>
 + **\[v0.1.1\]** Scrape stock history using yfinance<br>
 + **\[v0.1.2\]** Json storage format for stocks<br>
-    + **\[v0.1.23\]** rstocks format<br>
-    + **\[v0.1.27\]** astocks format<br>
+    + **\[v0.1.2.1\]** rstocks format<br>
+    + **\[v0.1.2.2\]** astocks format<br>
 + **\[v0.1.5\]** Convert dataframe into desired json format<br>
 + **\[v0.1.9\]** Upload documents into the database<br>
 + **\[v0.2.0\]** Timings have been implemented<br>
@@ -19,10 +18,20 @@ ase<br>
 + **\[v0.2.5\]** Automate data collection (removing to implement cron jobs)<br>
 + **\[v0.3.0\]** Multithreading<br>
 + **\[v0.3.3\]** Cron Job added<br>
-+ **\[v0.4.0\]** Completely overwrote code into OOP schema from Functional<br>
-+ **\[v0.4.3\]** Changed to new server and created localized database with compass visualization<br>
++ **\[v0.4.0\]** Refactor Functional code design into OOP design<br>
++ **\[v0.4.2\]** Migrated to local db server<br>
++ **\[v0.4.3\]** Added visualizations/aggregations of data using MongoDBCompass<br>
 + **\[v0.4.4\]** New authorization configuration file<br>
-+ **\[v0.4.5\]** Pushing json onto the documents instead of overwriting entire document every time<br>
++ **\[v0.4.5\]** Pushing json onto the documents instead of overwriting document every time<br>
++ **\[v0.4.6\]** Complete code refactor and generated new helper classes, log.py, timer.py, regex.py, and database.py<br>
++ **\[v0.4.7\]** Multithreading has been reimplemented<br>
++ **\[v0.4.8\]** Flexible Retrieval from database with queries has been implemented<br>
++ **\[v0.5.0\]** Several Options Designs implemented and testing for metrics.<br>
+    + **\[v0.5.0.1\]** nest expiry | nest strike format<br>
+    + **\[v0.5.0.2\]** id expiry | nest strike format<br>
+    + **\[v0.5.0.3\]** nest expiry | id strike format<br>
++ **\[v0.5.1\]** Using built-in thread-pooling for pymongo<br>
++ **\[v0.5.2\]** Cron Job implemented for options<br>
 <br>
 
 ## Milestones to reach
@@ -35,10 +44,7 @@ ase<br>
 ## Current Tasks
 - Multithreading incorporated with the new OOP format
 - Retrieve stock data from the database (OOP)
-- Options format json
-- Historical strike dates & Current strike dates json format
 - Crontab for updating strike dates once at beginning of market day
--  
 ------------------------------------------------------------------------------------------------------------------------------------------
 <br>
 
@@ -76,6 +82,8 @@ Multithreading speeds up I/O requests which we can see with the S&P 500 Index. H
 chunk of the time was due to a **cpu bound process** (serializing the 60 day period dataframe), the cpu<br>
 was most likely overworked trying to serialize all 16 threads at once. A few solutions for this would<br>
 be to either **reduce the number of threads** or **execute the script sequentially**.
+
+#### Current Revisions
 
 ----------------------------------------------------------------------------------------------------------------------
 <br>
@@ -136,7 +144,7 @@ Note: *2020-04-22T13:30:00.000+00:00* is a timestamp.
 <br>
 
 ### rstocks\[v0.2.3\]
-*current*
+*dismissed*
 ```
 {
 "_id": "06/19/20",
@@ -157,7 +165,7 @@ Note: *2020-04-22T13:30:00.000+00:00* is a timestamp.
 <br>
 
 ### astocks \[v0.1.2\]
-*current*
+*dismissed*
 ```
 {
 "_id": "SPY - 06/19/20",

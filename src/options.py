@@ -27,78 +27,92 @@ class Options_Record:
     def __init__(self, symbol):
 
         time = Time_Helper()
-        record_timer = Log_Tool(ERROR_FILENAME)
-        ticker = yf.Ticker(symbol)
+        self.ticker = yf.Ticker(symbol)
         self.symbol = symbol
 
         # catch here in case there is no options available for stock
         try:
-            self.expiries = [time.Month_Day_Year(expiry) for expiry in ticker.options] 
-            self.strikes = list(ticker.option_chain(ticker.options[0]).calls.strike)
+            self.expiries = [time.Month_Day_Year(expiry) for expiry in self.ticker.options] 
+            self.strikes = list(self.ticker.option_chain(self.ticker.options[0]).calls.strike)
         except IndexError:
             print("Skipping: ", symbol)
-            record_timer.error("options_record.init " + symbol)
-        
 
-    # to_list_by_expiry
+    # store
     # ==================================================
-    # Inputs:
-    # Outputs: (list) list_by_expiry
-    # 
-    # Function:
-    # Goes through and traverses call/put options by expiry.
-    # Then runs "to_list_by_strike" which will spit out all the
-    # documents at all strike points for that expiry, before
-    # extending each document onto the main list_by_expiry
-    def to_list_by_expiry(self):
-        time = Time_Helper() 
-        self.timestamp = time.now() 
-        self.date = self.timestamp.strftime("%m/%d/%y")
-        list_by_expiry = []
-        ticker = yf.Ticker(self.symbol)
-        expiries = ticker.options  
-
-        for expiry in expiries:
-            opt = ticker.option_chain(expiry)
-            list_by_expiry.extend(self.to_list_by_strike(opt.calls, "Call", expiry))
-            list_by_expiry.extend(self.to_list_by_strike(opt.puts, "Put", expiry))      
-
-        return list_by_expiry
-        
-    # to_list_by_strike
-    # ==================================================
-    # Inputs: (Dataframe) df, (string) contract, string (expiry)
-    # Outputs: (list) list_by_strike
-    #
-    # Function:
-    # This grabs either a call or a put dataframe, and converts
-    # all of the strike/expiry price points into a document
-    def to_list_by_strike(self, df, contract, expiry):
+    def store(self, collection):
         time = Time_Helper()
-        list_by_strike = []
-        for index in df.index:
-            doc = {} 
-            doc["Contract"] = contract
-            doc["Expiry"] = time.Month_Day_Year(expiry)
-            doc["Strike"] = str(df["strike"][index])
-            doc["Data"] = {}
-            doc["Data"]["Timestamp"] = self.timestamp
-            doc["Data"]["Bid"] = df["bid"][index]
-            doc["Data"]["Ask"] = df["ask"][index]
-            doc["Data"]["Last Price"] = df["lastPrice"][index]
-            doc["Data"]["Last Trade"] = df["lastTradeDate"][index]
-            doc["Data"]["Change"] = round(df["change"][index], 2)
-            doc["Data"]["Percent Change"] = round(df["percentChange"][index], 2)
-            doc["Data"]["Volume"] = float(df["volume"][index])
-            doc["Data"]["Open Interest"] = float(df["openInterest"][index])
-            doc["Data"]["Implied Volatility"] = df["impliedVolatility"][index]
-            doc["Data"]["In The Money"] = bool(df["inTheMoney"][index])
-            doc["Data"]["Contract Size"] = df["contractSize"][index]
-            doc["Data"]["Currency"] = df["currency"][index]
-            list_by_strike.append(doc)
-        return list_by_strike
-                          
+        self.timestamp = time.now()
+        self.date = self.timestamp.strftime("%m/%d/%y")
 
+
+        ### 
+
+        ### Update the individual ticker data        
+        for expiry in self.ticker.options:
+            opt = self.ticker.option_chain(expiry)
+            calls = opt.calls
+            puts = opt.puts
+        
+            for index in calls.index:
+                self.contract = "Call"
+                self.expiry = time.Month_Day_Year(expiry)
+                self.strike = str(calls["strike"][index])
+                _id = self.symbol + " - " + self.date + " - " + self.contract
+                h_query = "history." + self.expiry + "." + self.strike
+                collection.update(
+                    {
+                     "_id": _id
+                    },
+                    {
+                     "$push": {h_query: 
+                                self.to_document(calls, index) 
+                              }, 
+                     "$setOnInsert": {"_id": _id, "Date": self.date, "Symbol": self.symbol,
+                     "Contract": self.contract} 
+                    },
+                    upsert=True
+                )
+
+            for index in puts.index:
+                self.contract = "Put"
+                self.expiry = time.Month_Day_Year(expiry)
+                self.strike = str(puts["strike"][index])
+                _id = self.symbol + " - " + self.date + " - " + self.contract
+                h_query = "history." + self.expiry + "." + self.strike
+                collection.update(
+                    {
+                     "_id": _id
+                    },
+                    {
+                     "$push": {h_query:
+                                  self.to_document(puts, index)
+                              }, 
+                     "$setOnInsert": {"_id": _id, "Date": self.date, "Symbol": self.symbol,
+                     "Contract": self.contract} 
+                    },
+                    upsert=True
+                )  
+
+
+    # to_document
+    # ==================================================
+    def to_document(self, df, index):
+        doc = {}
+        doc["Timestamp"] = self.timestamp
+        doc["Bid"] = df["bid"][index]
+        doc["Ask"] = df["ask"][index]
+        doc["Last Price"] = df["lastPrice"][index]
+        doc["Last Trade"] = df["lastTradeDate"][index]
+        doc["Change"] = round(df["change"][index], 3)
+        doc["Percent Change"] = round(df["percentChange"][index], 3)
+        doc["Volume"] = float(df["volume"][index])
+        doc["Open Interest"] = float(df["openInterest"][index])
+        doc["Implied Volatility"] = round(df["impliedVolatility"][index], 3)
+        doc["In The Money"] = bool(df["inTheMoney"][index])
+        doc["Contract Size"] = df["contractSize"][index]
+        doc["Currency"] = df["currency"][index]
+        return doc
+                                 
 ##########################################################
 ##########################################################
 class Options_Helper:
@@ -124,6 +138,10 @@ class Options_Helper:
         ### Object instances
         self.symbols = []
 
+        ### Retrieve Collection
+        self.client = Data_Client()
+        self.collection = self.client[COLLECTION_NAME]
+
         ### Parsing user input
         if isinstance(user_input, str):
             with open(user_input) as inFile:
@@ -144,56 +162,14 @@ class Options_Helper:
         
         ### Start Timer
         store_timer = Log_Tool(LOG_FILENAME)
-        store_timer.start("options.store")
-
-        ### Retrieve Collection
-        client = Data_Client()
-        collection = client[COLLECTION_NAME]
+        store_timer.start("options.store " + symbol)
 
         ### Establish a record
         record = Options_Record(symbol)
-        doc_list = record.to_list_by_expiry()
-
-        for doc in doc_list:            
-            date = record.date
-            contract = doc["Contract"]
-            _id = symbol + " - " + contract + " - " + date
-
-            ### May not be required at all
-            ### Remove existing entry if found
-            #collection.update_one(
-            #    { #Find document query
-            #     "_id": _id
-            #    },
-            #    { #Update document query
-            #     "$pull": {"history": 
-            #                {doc["Expiry"]: 
-            #                    {doc["Strike"]: doc["Data"]}
-            #                }
-            #              }
-            #    },
-            #)
-
-            ### Pushing existing entry if found
-            collection.update_one(
-                { #Find document query
-                 "_id": _id
-                },
-                { #Update document query
-                 "$push": {"history":
-                            {doc["Expiry"]:
-                                {doc["Strike"]: doc["Data"]}
-                            }
-                          },
-                 "$setOnInsert": {"_id": _id, "Date": date, "Symbol": symbol,
-                 "Contract": contract}
-                },
-                #Options
-                upsert=True
-            )
+        record.store(self.collection)
 
         ### End Timer
-        store_timer.end("options.store") 
+        store_timer.end("options.store " + symbol) 
 
     # update 
     # =======================================================
