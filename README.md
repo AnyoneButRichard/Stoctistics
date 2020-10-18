@@ -42,21 +42,18 @@ An application that keeps track of historical ticker and options data.
 - Generate a cache 
 
 ## Current Tasks
+
 - System redesign to accomodate for long term issues
 - Measuring metrics for which options format to use
 - Update strikes list and expiries list once at the beginning of every day
 ------------------------------------------------------------------------------------------------------------------------------------------
 <br>
 
-
-
 ## Timing Reports
 <br>
 <br>
 
-### Stocks Formats
-
-#### Functional v\[0.3.0\] vs Class Design v\[0.4.6\] *current*
+#### Stocks: Functional v\[0.3.0\] vs Class Design v\[0.4.6\] *current*
 |                   	| 1 stock/cycle 	| S&P 500/cycle 	|
 |-------------------	|:-------------:	|:-------------:	|
 | Functional Design 	|  1.08 seconds 	| 64.39 seconds 	|
@@ -64,15 +61,15 @@ An application that keeps track of historical ticker and options data.
 <br>
 <br>
 
-#### Initial v\[0.1.2\]
-|                	| 1 stock / 1 day 	| 1 stock / 60 days 	|     S&P 500 / 1 day    	|   S&P 500 / 60 days   	|
-|:--------------:	|:---------------:	|:-----------------:	|:----------------------:	|:---------------------:	|
-| rstocks format 	|  15.07 seconds  	|   753.34 seconds  	| 124 minutes 49 seconds 	|       not tested      	|
-| astocks format 	|   1.28 seconds  	|    8.32 seconds   	|  10 minutes 37 seconds 	| 68 minutes 55 seconds 	|
+#### Stocks: Multithreading (16 threads) \[v0.3.0\]
+|                	| 1 stock / 1 day 	| 1 stock / 60 days 	|   S&P 500 / 1 day   	|   S&P 500 / 60 days   	|
+|----------------	|:---------------:	|:-----------------:	|:-------------------:	|:---------------------:	|
+| rstocks format 	|  1.083 seconds  	|   32.08 seconds   	| 1 minute. 5 seconds 	| 16 minutes 36 seconds 	|
+| astocks format 	|  1.066 seconds  	|   33.02 seconds   	|  1 minute 4 seconds 	|  17 minutes 6 seconds 	|
 <br>
 <br>
 
-#### Improved serialization v\[0.2.3\]
+#### Stocks: Improved serialization v\[0.2.3\]
 |                	| 1 stock / 1 day 	| 1 stock / 60 days 	|    S&P 500 / 1 day   	|   S&P 500 / 60 days   	|
 |----------------	|:---------------:	|:-----------------:	|:--------------------:	|:---------------------:	|
 | rstocks format 	|  1.146 seconds  	|   6.979 seconds   	| 9 minutes 29 seconds 	| 57 minutes 48 seconds 	|
@@ -80,25 +77,29 @@ An application that keeps track of historical ticker and options data.
 <br>
 <br>
 
-#### Multithreading (16 threads) \[v0.3.0\]
-|                	| 1 stock / 1 day 	| 1 stock / 60 days 	|   S&P 500 / 1 day   	|   S&P 500 / 60 days   	|
-|----------------	|:---------------:	|:-----------------:	|:-------------------:	|:---------------------:	|
-| rstocks format 	|  1.083 seconds  	|   32.08 seconds   	| 1 minute. 5 seconds 	| 16 minutes 36 seconds 	|
-| astocks format 	|  1.066 seconds  	|   33.02 seconds   	|  1 minute 4 seconds 	|  17 minutes 6 seconds 	|
+#### Stocks: Initial v\[0.1.2\]
+|                	| 1 stock / 1 day 	| 1 stock / 60 days 	|     S&P 500 / 1 day    	|   S&P 500 / 60 days   	|
+|:--------------:	|:---------------:	|:-----------------:	|:----------------------:	|:---------------------:	|
+| rstocks format 	|  15.07 seconds  	|   753.34 seconds  	| 124 minutes 49 seconds 	|       not tested      	|
+| astocks format 	|   1.28 seconds  	|    8.32 seconds   	|  10 minutes 37 seconds 	| 68 minutes 55 seconds 	|
+<br>
+<br>
 
 Note: 60 day periods cost drastically more time. This is most likely due to limitations of the cpu.<br>
 Multithreading speeds up I/O requests which we can see with the S&P 500 Index. However since a large<br>
 chunk of the time was due to a **cpu bound process** (serializing the 60 day period dataframe), the cpu<br>
 was most likely overworked trying to serialize all 16 threads at once. A few solutions for this would<br>
 be to either **reduce the number of threads** or **execute the script sequentially**.
-
-#### Current Revisions
+<br>
+<br>
 
 ----------------------------------------------------------------------------------------------------------------------
 <br>
 
 ## Variables & Descriptions:
-To help with interpreting the code a bit more as there's no clarification of variables.<br>
+To help with interpreting the code a bit more as there's no clarification of variables.
+
+<br>
 <br>
 
 
