@@ -53,7 +53,7 @@ An application that keeps track of historical ticker and options data.
 <br>
 <br>
 
-#### Stocks: Functional v\[0.3.0\] vs Class Design v\[0.4.6\] *current*
+#### Stocks: Functional v\[0.3.0\] vs Class Design v\[0.4.6\]
 |                   	| 1 stock/cycle 	| S&P 500/cycle 	|
 |-------------------	|:-------------:	|:-------------:	|
 | Functional Design 	|  1.08 seconds 	| 64.39 seconds 	|
